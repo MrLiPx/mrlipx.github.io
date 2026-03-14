@@ -3,78 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="5; url=https://dev.mrlipx.com/">
-    <link rel="canonical" href="https://dev.mrlipx.com/">
     <title>mrlipx</title>
     <style>
-        :root { --bg: #050505; --text: #fff; --accent: #5865F2; }
+        :root { --bg: #050505; --text: #fff; --time: 5s; }
         body { 
             background: var(--bg); color: var(--text); 
             font-family: -apple-system, system-ui, sans-serif;
             display: flex; align-items: center; justify-content: center;
             height: 100vh; margin: 0; -webkit-font-smoothing: antialiased;
+            overflow: hidden;
         }
-        .card { text-align: center; }
+        .card { text-align: center; width: 280px; }
         #avatar {
             width: 72px; height: 72px; border-radius: 50%;
-            background: #111; margin-bottom: 1rem;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
+            margin-bottom: 1rem; border: 1px solid #222;
+            background: url('https://cdn.mrlipx.com/media/images/ui/loading-circle.svg') center/cover no-repeat;
         }
-        .name { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
-        
-        /* Fast Progress Bar */
-        .progress-bg { 
-            width: 120px; height: 2px; background: #1a1a1a; 
-            margin: 0 auto; overflow: hidden; border-radius: 2px;
-        }
+        .name { font-size: 1.25rem; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
+        .user { font-size: 0.85rem; color: #666; margin-bottom: 0.75rem; min-height: 1.2em; }
+        .bio { font-size: 0.85rem; color: #aaa; margin-bottom: 1.5rem; line-height: 1.5; min-height: 3em; }
+        .progress-bg { width: 100px; height: 2px; background: #1a1a1a; margin: 0 auto; overflow: hidden; }
         .progress-fill { 
             width: 100%; height: 100%; background: var(--text); 
             transform: translateX(-100%);
-            animation: progress 5s linear forwards;
+            animation: p var(--time) linear forwards;
         }
-
-        @keyframes progress { to { transform: translateX(0); } }
-        
-        .status { 
-            font-size: 10px; color: #444; margin-top: 1rem; 
-            text-transform: uppercase; letter-spacing: 0.2em; 
-        }
+        @keyframes p { to { transform: translateX(0); } }
+        .status { font-size: 9px; color: #333; margin-top: 1.5rem; text-transform: uppercase; letter-spacing: 0.2em; }
         a { color: inherit; text-decoration: none; }
     </style>
 </head>
 <body>
-
     <div class="card">
         <img id="avatar" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
-        <div class="name">mrlipx</div>
-        
-        <div class="progress-bg">
-            <div class="progress-fill"></div>
-        </div>
-        
-        <div class="status">Jumping to <a href="https://dev.mrlipx.com/">dev</a></div>
+        <div class="name" id="name">mrlipx</div>
+        <div class="user" id="user"></div>
+        <div class="bio" id="bio"></div>
+        <div class="progress-bg"><div class="progress-fill"></div></div>
+        <div class="status">Redirecting <a href="https://dev.mrlipx.com/">dev</a></div>
     </div>
 
     <script>
-        const DISCORD_ID = "1150713121560862720"; // Replace with your actual Discord ID
-        const REDIRECT_URL = "https://dev.mrlipx.com/";
+        const ID = "163276171", URL = "https://dev.mrlipx.com/", S = 5;
 
-        // Fetch Discord Avatar via Lanyard API (Fastest Method)
-        fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
-            .then(res => res.json())
-            .then(res => {
-                const user = res.data.discord_user;
-                const avatarHash = user.avatar;
-                // Construct Discord Avatar URL
-                document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${avatarHash}.png?size=128`;
-            })
-            .catch(() => {
-                // Fallback to a placeholder if Discord fetch fails
-                document.getElementById('avatar').src = "https://github.com/mrlipx.png";
+        fetch(`https://api.github.com/user/${ID}`)
+            .then(r => r.json())
+            .then(d => {
+                document.getElementById('avatar').src = d.avatar_url;
+                document.getElementById('name').textContent = d.name || d.login;
+                document.getElementById('user').textContent = `@${d.login}`;
+                document.getElementById('bio').textContent = d.bio || "";
             });
 
-        setTimeout(() => window.location.replace(REDIRECT_URL), 5000);
+        setTimeout(() => location.replace(URL), S * 1000);
     </script>
 </body>
 </html>
