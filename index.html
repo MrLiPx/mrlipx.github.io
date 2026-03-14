@@ -2,19 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mrlipx</title>
     <meta http-equiv="refresh" content="0; url=https://dev.mrlipx.com/">
     <link rel="canonical" href="https://dev.mrlipx.com/">
+    <title>mrlipx</title>
     <style>
         body { background: #050505; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
         img { width: 48px; height: 48px; }
     </style>
 </head>
 <body>
-    <img src="https://cdn.mrlipx.com/media/images/ui/loading-circle.svg" alt="Redirecting">
+    <img src="https://cdn.mrlipx.com/media/images/ui/loading-circle.svg">
     <script>
-        window.location.replace("https://dev.mrlipx.com/");
+        const ID = "163276171";
+        const URL = "https://dev.mrlipx.com/";
+
+        fetch(`https://api.github.com/user/${ID}`)
+            .then(r => r.json())
+            .then(d => { document.title = d.name || d.login; })
+            .finally(() => location.replace(URL));
+
+        setTimeout(() => location.replace(URL), 1500);
     </script>
 </body>
 </html>
