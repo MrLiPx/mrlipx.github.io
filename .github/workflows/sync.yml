@@ -1,17 +1,27 @@
 name: Sync Redirects
 on:
   push:
-    branches: [ main, master ]
-    paths: [ 'index.html' ]
+    branches:
+      - main
+    paths:
+      - 'index.html'
+
 jobs:
-  copy-file:
+  sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Copy index to 404
+
+      - name: Overwrite 404 with index
         run: cp index.html 404.html
-      - name: Commit change
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Auto-sync 404.html from index.html"
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add 404.html
+          git commit -m "Auto-sync 404.html from index.html" || exit 0
+          git push
